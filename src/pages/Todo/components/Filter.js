@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import { Divider } from 'antd';
+import { routerRedux } from 'dva/router';
 
 class Filter extends React.Component {
     renderLink(name, type) {
@@ -11,11 +12,11 @@ class Filter extends React.Component {
 
         return (
             <a onClick={ () => { 
-                this.props.dispatch({
-                    type: 'Todo/filter',
-                    payload: type
-                }) } 
-                }>
+                this.props.dispatch(routerRedux.push({
+                    pathname: '/Todo',
+                    query: { filter: type },
+                }));
+            }}>
                 {name}
             </a>
         )

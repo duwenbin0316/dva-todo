@@ -5,7 +5,7 @@ export default {
     namespace: 'Todo',
     state: {
         todos: [],
-        filter: 'ALL'
+        filter: null
     },
     reducers: {
         save(state, { payload }){
@@ -25,7 +25,7 @@ export default {
                 todos: newTodos
             }
         },
-        filter(state, { payload }){
+        filter(state, { payload = 'ALL' }){
             return {
                 ...state,
                 filter: payload
@@ -53,5 +53,14 @@ export default {
             const res = yield call(remove, payload);
             yield put({ type: 'delete', payload: res })
         }
+    },
+    subscriptions: {
+        setup({ dispatch, history }) {
+            return history.listen(({ pathname, query }) => {
+                if (pathname === '/Todo') {
+                    dispatch({ type: 'filter', payload: query.filter });
+                }
+            });
+        },
     }
 }
