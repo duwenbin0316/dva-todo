@@ -28,8 +28,23 @@ class Todo extends React.Component {
         })
     }
 
+    /**
+     * 组件挂载后派发mock action
+     * mock 5到10个假数据
+     */
+    componentDidMount() {
+        this.props.dispatch({
+            type: 'Todo/mock'
+        })
+    }
+
     render() {
         const columns = [
+            {
+                title: 'Key',
+                dataIndex: 'id',
+                key: 'id',
+            },
             {
                 title: 'Text',
                 dataIndex: 'text',

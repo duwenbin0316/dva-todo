@@ -1,5 +1,11 @@
 import { addTodo, remove } from "../services/Todo";
+const Mock = require('mockjs');
 
+const delay = (timeout) => {
+    return new Promise((resolve) => {
+        setTimeout(resolve,timeout);
+    })
+}
 
 export default {
     namespace: 'Todo',
@@ -13,13 +19,12 @@ export default {
                 ...state,
                 todos: [
                     ...state.todos,
-                    payload
+                    ...payload
                 ]
             }
         },
         delete(state, { payload }){
-            const newTodos = state.todos.filter((t, i) => i !== payload)
-
+            const newTodos = state.todos.filter((t, i) => t.id !== payload)
             return {
                 ...state,
                 todos: newTodos
@@ -47,11 +52,24 @@ export default {
     effects: {
         *addTodo({ payload }, { call, put }){
             const res = yield call(addTodo, payload);
-            yield put({ type: 'save', payload: { ...res } })
+            yield put({ type: 'save', payload: [{ ...res }] })
         },
         *remove({ payload }, { call, put }){
             const res = yield call(remove, payload);
             yield put({ type: 'delete', payload: res })
+        },
+        *mock(action, { call, put }){
+            yield call(delay, 1000);
+            const { todos } = Mock.mock({
+                'todos|5-10': [
+                    {
+                        id: '@integer',
+                        text: '@string',
+                        completed: '@boolean'
+                    }
+                ] 
+            })
+            yield put({ type: 'save', payload: todos })
         }
     },
     subscriptions: {
