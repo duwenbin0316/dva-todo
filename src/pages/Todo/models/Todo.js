@@ -1,4 +1,5 @@
 import { addTodo, remove } from "../services/Todo";
+import { routerRedux } from 'dva/router';
 const Mock = require('mockjs');
 
 const delay = (timeout) => {
@@ -50,6 +51,12 @@ export default {
         }
     },
     effects: {
+        *login({ payload }, { call, put }){
+            yield call(delay, 1000);
+            yield put(routerRedux.push({
+                pathname: '/Todo',
+            }))
+        },
         *addTodo({ payload }, { call, put }){
             const res = yield call(addTodo, payload);
             yield put({ type: 'save', payload: [{ ...res }] })

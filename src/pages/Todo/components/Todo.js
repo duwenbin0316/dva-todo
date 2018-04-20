@@ -35,7 +35,7 @@ class Todo extends React.Component {
     componentDidMount() {
         this.props.dispatch({
             type: 'Todo/mock'
-        })
+        });
     }
 
     render() {
